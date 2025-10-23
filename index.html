@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GK Stores</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: #2c3e50;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .navbar h2 { 
+      font-size: 28.8px; 
+      color: #3498db;
+    }
+
+    .search-box input {
+      padding: 10px 15px;
+      border-radius: 20px;
+      border: none;
+      width: 300px;
+      font-size: 14px;
+      background: white;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 0;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .user-info:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .user-icon {
+      font-size: 1.5rem;
+    }
+
+    .user-name {
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      background: #e74c3c;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 15px;
+      cursor: pointer;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-logout:hover {
+      background: #c0392b;
+    }
+
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: #3498db;
+      transition: color 0.3s;
+    }
+
+    .cart-icon:hover {
+      color: #2980b9;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .menu-list { 
+      list-style: none;
+      display: flex; 
+      gap: 20px;
+      align-items: center;
+      margin: 0;
+    }
+
+    .menu-list li a { 
+      color: white;
+      text-decoration: none;
+      font-weight: 500; 
+      padding: 8px 15px;
+      border-radius: 15px;
+      transition: background 0.3s;
+      display: inline-block;
+    }
+
+    .menu-list li a:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .container { 
+      display: flex; 
+      min-height: calc(100vh - 70px);
+    }
+
+    .sidebar {
+      width: 280px; 
+      background: white;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      max-height: calc(100vh - 70px);
+      overflow-y: auto;
+    }
+
+    .sidebar h3 { 
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .category-item {
+      margin: 10px 0;
+      border-radius: 8px;
+      background: #f8f9fa;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .category-item:hover {
+      background: #e9ecef;
+      transform: translateX(5px);
+    }
+
+    .category-header {
+      padding: 12px 15px;
+      color: #2c3e50;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .category-header.active {
+      background: #3498db;
+      color: white;
+    }
+
+    .subcategory-list {
+      background: white;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .subcategory-list.active {
+      max-height: 200px;
+    }
+
+    .subcategory-item {
+      padding: 10px 20px;
+      color: #555;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .subcategory-item:hover {
+      background: #f8f9fa;
+      color: #3498db;
+    }
+
+    .filter-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+
+    .filter-title {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .price-range {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .price-range input {
+      width: 80px;
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .brand-list {
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 10px 0;
+    }
+
+    .brand-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .brand-item:hover {
+      color: #3498db;
+    }
+
+    .brand-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #3498db;
+    }
+
+    .brand-item label {
+      cursor: pointer;
+      flex: 1;
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-count {
+      font-size: 0.85rem;
+      color: #999;
+      background: #e9ecef;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .clear-filters {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .clear-filters:hover {
+      background: #c0392b;
+    }
+
+    .main-content { 
+      flex: 1;
+      padding: 30px;
+    }
+
+    .intro { 
+      text-align: center; 
+      margin-bottom: 30px;
+      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .intro h3 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .intro p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .category-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .category-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .category-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    .category-box img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .category-box h4 {
+      font-size: 1.2rem;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .category-box p {
+      color: #666;
+    }
+
+    .details-section {
+      padding: 20px;
+      margin-top: 20px;
+      background: white;
+      border-radius: 10px;
+      display: none;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .sort-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .sort-controls select {
+      padding: 8px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .active-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .filter-tag {
+      background: #3498db;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .filter-tag button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .product-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-color: #3498db;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .product-card h5 {
+      font-size: 1rem;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .product-card p {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      color: #e74c3c;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+
+    .product-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #219a52;
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .breadcrumb {
+      background: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      color: #2c3e50;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .cart-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .cart-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #eee;
+    }
+
+    .close-cart {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      transition: background 0.3s;
+    }
+
+    .cart-item:hover {
+      background: #f8f9fa;
+    }
+
+    .cart-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .cart-item-details {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .cart-item-specs {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .cart-item-price {
+      color: #e74c3c;
+      font-weight: 700;
+      margin: 5px 0;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quantity-btn {
+      background: #3498db;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .quantity-btn:hover {
+      background: #2980b9;
+    }
+
+    .quantity {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      width: 50px;
+      text-align: center;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    .remove-item {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .remove-item:hover {
+      background: #c0392b;
+    }
+
+    .cart-total {
+      text-align: center;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .total-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    .checkout-btn {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .checkout-btn:hover {
+      background: #219a52;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #27ae60;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      z-index: 1003;
+      transform: translateX(300px);
+      transition: transform 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    .notification.error {
+      background: #e74c3c;
+    }
+
+    .payment-method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .payment-option {
+      background: #f8f9fa;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .payment-option:hover {
+      transform: translateY(-5px);
+      border-color: #3498db;
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .payment-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .payment-name {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+
+    .payment-desc {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .payment-form {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .card-logos {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 1.5rem;
+    }
+
+    .upi-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .upi-btn {
+      padding: 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .upi-btn:hover {
+      border-color: #3498db;
+      background: #f0f8ff;
+    }
+
+    .bank-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .bank-btn {
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .bank-btn:hover {
+      border-color: #3498db;
+      background: #f0f8ff;
+    }
+
+    .submit-payment-btn {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .submit-payment-btn:hover {
+      background: #219a52;
+    }
+
+    .payment-success {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .success-icon {
+      font-size: 5rem;
+      color: #27ae60;
+      margin-bottom: 20px;
+    }
+
+    .order-id {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-weight: 600;
+    }
+
+    footer {
+      background: #2c3e50;
+      text-align: center;
+      padding: 15px;
+      color: white;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        max-height: none;
+      }
+      
+      .navbar {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .search-box input {
+        width: 250px;
+      }
+
+      .sort-controls {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .upi-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <h2>GK Electronics & Home Appliances</h2>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search products..." />
+    </div>
+    <div class="navbar-right">
+      <div class="cart-icon" onclick="openCart()">
+        🛒
+        <span class="cart-badge" id="cartBadge">0</span>
+      </div>
+      <ul class="menu-list">
+        <li><a href="#home" onclick="goHome()">Home</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html" id="loginMenuItem">Login</a></li>
+      </ul>
+      <div class="user-section" id="userSection"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="sidebar">
+      <h3>📱 Categories</h3>
+      <div id="categoryMenu"></div>
+
+      <div class="filter-section" id="filterSection">
+        <div class="filter-title">🔍 Filters</div>
+        
+        <div class="filter-group">
+          <label>Price Range</label>
+          <div class="price-range">
+            <input type="number" id="minPrice" placeholder="Min" value="">
+            <span>-</span>
+            <input type="number" id="maxPrice" placeholder="Max" value="">
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label>🏢 Brands</label>
+          <div class="brand-list" id="brandList"></div>
+        </div>
+
+        <button class="clear-filters" onclick="clearFilters()">Clear All Filters</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="intro">
+        <h3>Welcome to GK Electronics!</h3>
+        <p>Your trusted store for electronics and home appliances</p>
+      </div>
+
+      <div class="breadcrumb" id="breadcrumb">Home</div>
+      <div class="category-container" id="categoryContainer"></div>
+      <div class="details-section" id="detailsSection"></div>
+    </div>
+  </div>
+
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-content">
+      <div class="cart-header">
+        <h2>Shopping Cart</h2>
+        <button class="close-cart" onclick="closeCart()">&times;</button>
+      </div>
+      <div id="cartItems"></div>
+      <div class="cart-total" id="cartTotal"></div>
+    </div>
+  </div>
+
+  <div class="cart-modal" id="paymentModal">
+    <div class="cart-content" style="max-width: 800px;">
+      <div class="cart-header">
+        <h2>💳 Select Payment Method</h2>
+        <button class="close-cart" onclick="closePaymentModal()">&times;</button>
+      </div>
+      
+      <div id="paymentMethods">
+        <div class="payment-method-grid">
+          <div class="payment-option" onclick="selectPaymentMethod('card')">
+            <div class="payment-icon">💳</div>
+            <div class="payment-name">Credit/Debit Card</div>
+            <div class="payment-desc">Visa, Mastercard, Amex, Rupay</div>
+          </div>
+
+          <div class="payment-option" onclick="selectPaymentMethod('upi')">
+            <div class="payment-icon">📱</div>
+            <div class="payment-name">UPI</div>
+            <div class="payment-desc">Google Pay, PhonePe, Paytm</div>
+          </div>
+
+          <div class="payment-option" onclick="selectPaymentMethod('netbanking')">
+            <div class="payment-icon">🏦</div>
+            <div class="payment-name">Net Banking</div>
+            <div class="payment-desc">All Major Banks</div>
+          </div>
+
+          <div class="payment-option" onclick="selectPaymentMethod('wallet')">
+            <div class="payment-icon">👛</div>
+            <div class="payment-name">Wallets</div>
+            <div class="payment-desc">Paytm, PhonePe, Amazon Pay</div>
+          </div>
+
+          <div class="payment-option" onclick="selectPaymentMethod('cod')">
+            <div class="payment-icon">💵</div>
+            <div class="payment-name">Cash on Delivery</div>
+            <div class="payment-desc">Pay when you receive</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="paymentDetails" style="display: none;">
+        <button class="btn btn-primary" onclick="backToPaymentMethods()" style="margin-bottom: 20px;">
+          ← Back to Payment Methods
+        </button>
+        <div id="paymentForm"></div>
+      </div>
+
+      <div class="cart-total" style="margin-top: 20px;">
+        <div class="total-amount">
+          Total Amount: ₹<span id="paymentTotal">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notification" id="notification"></div>
+
+  <footer>
+    © 2025 GK Electronics & Home Appliances Store. All Rights Reserved.
+  </footer>
+
+  <script>
+    const data = {
+      electronics: {
+        name: "📱 Electronics",
+        subcategories: {
+          mobiles: {
+            name: "Mobile Phones",
+            img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=200&fit=crop",
+            items: [
+              { id: "mob1", name: "Samsung Galaxy S24", specs: "128GB, 8GB RAM", price: 79999, brand: "Samsung", img: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=250&h=200&fit=crop" },
+              { id: "mob2", name: "iPhone 15", specs: "128GB, A17 Chip", price: 79900, brand: "Apple", img: "https://images.unsplash.com/photo-1556656793-08538906a9f8?w=250&h=200&fit=crop" },
+              { id: "mob3", name: "OnePlus 12", specs: "256GB, Snapdragon 8 Gen 3", price: 64999, brand: "OnePlus", img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=250&h=200&fit=crop" },
+              { id: "mob4", name: "Redmi Note 13", specs: "128GB, 6GB RAM", price: 16999, brand: "Xiaomi", img: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=250&h=200&fit=crop" }
+            ]
+          },
+          laptops: {
+            name: "Laptops & Computers",
+            img: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&h=200&fit=crop",
+            items: [
+              { id: "lap1", name: "MacBook Air M3", specs: "13-inch, 256GB SSD", price: 114900, brand: "Apple", img: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=250&h=200&fit=crop" },
+              { id: "lap2", name: "Dell Inspiron 15", specs: "Intel i5, 8GB RAM", price: 55990, brand: "Dell", img: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=250&h=200&fit=crop" },
+              { id: "lap3", name: "HP Pavilion Gaming", specs: "AMD Ryzen 5, GTX 1650", price: 69990, brand: "HP", img: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=250&h=200&fit=crop" },
+              { id: "lap4", name: "Gaming Desktop", specs: "Intel i7, RTX 3060", price: 89999, brand: "Custom", img: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=250&h=200&fit=crop" }
+            ]
+          },
+          audio: {
+            name: "Audio & Headphones",
+            img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=200&fit=crop",
+            items: [
+              { id: "aud1", name: "Sony WH-1000XM5", specs: "Noise Cancelling", price: 29990, brand: "Sony", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=250&h=200&fit=crop" },
+              { id: "aud2", name: "AirPods Pro 2", specs: "Active Noise Cancelling", price: 24900, brand: "Apple", img: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=250&h=200&fit=crop" },
+              { id: "aud3", name: "JBL Flip 6", specs: "Portable Bluetooth Speaker", price: 9999, brand: "JBL", img: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=250&h=200&fit=crop" },
+              { id: "aud4", name: "Marshall Acton III", specs: "Home Speaker", price: 24999, brand: "Marshall", img: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=250&h=200&fit=crop" }
+            ]
+          },
+          tv: {
+            name: "TVs & Entertainment",
+            img: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=300&h=200&fit=crop",
+            items: [
+              { id: "tv1", name: "Samsung 55\" 4K TV", specs: "Crystal UHD, Smart TV", price: 54990, brand: "Samsung", img: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=250&h=200&fit=crop" },
+              { id: "tv2", name: "LG 43\" Smart TV", specs: "Full HD, WebOS", price: 32990, brand: "LG", img: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=250&h=200&fit=crop" },
+              { id: "tv3", name: "Fire TV Stick 4K", specs: "Streaming Device", price: 5499, brand: "Amazon", img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=250&h=200&fit=crop" },
+              { id: "tv4", name: "Sony Sound Bar", specs: "2.1 Channel, Bluetooth", price: 18990, brand: "Sony", img: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=250&h=200&fit=crop" }
+            ]
+          }
+        }
+      },
+      appliances: {
+        name: "🏠 Home Appliances",
+        subcategories: {
+          kitchen: {
+            name: "Kitchen Appliances",
+            img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop",
+            items: [
+              { id: "kit1", name: "LG Refrigerator", specs: "260L, Double Door", price: 28990, brand: "LG", img: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=250&h=200&fit=crop" },
+              { id: "kit2", name: "Samsung Microwave", specs: "28L, Convection", price: 15990, brand: "Samsung", img: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=250&h=200&fit=crop" },
+              { id: "kit3", name: "Philips Air Fryer", specs: "4.1L, Digital Display", price: 12995, brand: "Philips", img: "https://images.unsplash.com/photo-1605346434674-a440ca4dc4c0?w=250&h=200&fit=crop" },
+              { id: "kit4", name: "Mixer Grinder", specs: "750W, 3 Jars", price: 4999, brand: "Bajaj", img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=250&h=200&fit=crop" }
+            ]
+          },
+          washing: {
+            name: "Washing & Cleaning",
+            img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop",
+            items: [
+              { id: "was1", name: "IFB Washing Machine", specs: "6kg, Front Load", price: 32990, brand: "IFB", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=250&h=200&fit=crop" },
+              { id: "was2", name: "Samsung Top Load", specs: "7kg, Semi-Automatic", price: 15990, brand: "Samsung", img: "https://images.unsplash.com/photo-1572635148818-ef6fd45eb394?w=250&h=200&fit=crop" },
+              { id: "was3", name: "Vacuum Cleaner", specs: "Bagless, 2000W", price: 8999, brand: "Eureka Forbes", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=250&h=200&fit=crop" },
+              { id: "was4", name: "Robot Vacuum", specs: "Smart Mapping", price: 25999, brand: "iRobot", img: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=250&h=200&fit=crop" }
+            ]
+          },
+          cooling: {
+            name: "Air Conditioners & Coolers",
+            img: "https://images.unsplash.com/photo-1631545249636-0ee6d0e1d23d?w=300&h=200&fit=crop",
+            items: [
+              { id: "cool1", name: "Daikin 1.5 Ton AC", specs: "5 Star, Inverter", price: 45990, brand: "Daikin", img: "https://images.unsplash.com/photo-1631545249636-0ee6d0e1d23d?w=250&h=200&fit=crop" },
+              { id: "cool2", name: "LG Window AC", specs: "1 Ton, 3 Star", price: 28990, brand: "LG", img: "https://images.unsplash.com/photo-1628744876497-eb30460be9f6?w=250&h=200&fit=crop" },
+              { id: "cool3", name: "Desert Air Cooler", specs: "55L, Remote Control", price: 12999, brand: "Symphony", img: "https://images.unsplash.com/photo-1631545249636-0ee6d0e1d23d?w=250&h=200&fit=crop" },
+              { id: "cool4", name: "Tower Fan", specs: "3 Speed, Remote", price: 6999, brand: "Havells", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=250&h=200&fit=crop" }
+            ]
+          }
+        }
+      }
+    };
+
+    let cart = [];
+    let currentBreadcrumb = ['Home'];
+    let currentProducts = [];
+    let filteredProducts = [];
+    let currentUser = null;
+    let selectedPaymentMethod = null;
+    let selectedBrands = [];
+    let availableBrands = {};
+
+    function getAllBrands() {
+      const brandCount = {};
+      
+      Object.keys(data).forEach(categoryKey => {
+        const category = data[categoryKey];
+        Object.keys(category.subcategories).forEach(subKey => {
+          const subcategory = category.subcategories[subKey];
+          subcategory.items.forEach(item => {
+            if (item.brand) {
+              brandCount[item.brand] = (brandCount[item.brand] || 0) + 1;
+            }
+          });
+        });
+      });
+      
+      return brandCount;
+    }
+
+    function updateBrandList() {
+      const brandList = document.getElementById('brandList');
+      
+      if (currentProducts.length === 0) {
+        brandList.innerHTML = '<p style="color: #999; font-size: 0.9rem;">Select a category first</p>';
+        return;
+      }
+
+      const brandCount = {};
+      currentProducts.forEach(item => {
+        if (item.brand) {
+          brandCount[item.brand] = (brandCount[item.brand] || 0) + 1;
+        }
+      });
+
+      const sortedBrands = Object.keys(brandCount).sort();
+      
+      if (sortedBrands.length === 0) {
+        brandList.innerHTML = '<p style="color: #999; font-size: 0.9rem;">No brands available</p>';
+        return;
+      }
+
+      brandList.innerHTML = sortedBrands.map(brand => `
+        <div class="brand-item">
+          <input type="checkbox" id="brand-${brand}" value="${brand}" 
+                 ${selectedBrands.includes(brand) ? 'checked' : ''}
+                 onchange="toggleBrand('${brand}')">
+          <label for="brand-${brand}">
+            <span>${brand}</span>
+            <span class="brand-count">${brandCount[brand]}</span>
+          </label>
+        </div>
+      `).join('');
+    }
+
+    function toggleBrand(brand) {
+      const index = selectedBrands.indexOf(brand);
+      if (index > -1) {
+        selectedBrands.splice(index, 1);
+      } else {
+        selectedBrands.push(brand);
+      }
+      applyFilters();
+    }
+
+    function initializeAuth() {
+      const loggedInUser = localStorage.getItem('currentUser');
+      
+      if (loggedInUser) {
+        currentUser = JSON.parse(loggedInUser);
+        updateUserDisplay();
+      } else {
+        updateUserDisplay();
+      }
+    }
+
+    function updateUserDisplay() {
+      const userSection = document.getElementById('userSection');
+      const loginMenuItem = document.getElementById('loginMenuItem');
+      
+      if (currentUser) {
+        userSection.innerHTML = `
+          <div class="user-info">
+            <span class="user-icon">👤</span>
+            <span class="user-name">${currentUser.fullname || currentUser.username}</span>
+          </div>
+          <button class="btn-logout" onclick="logout()">Logout</button>
+        `;
+        userSection.style.display = 'flex';
+        if (loginMenuItem) loginMenuItem.style.display = 'none';
+      } else {
+        userSection.innerHTML = '';
+        userSection.style.display = 'none';
+        if (loginMenuItem) loginMenuItem.style.display = 'block';
+      }
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      updateUserDisplay();
+      showNotification('Logged out successfully');
+      cart = [];
+      updateCartBadge();
+    }
+
+    function findProductById(id) {
+      for (const categoryKey of Object.keys(data)) {
+        const category = data[categoryKey];
+        for (const subKey of Object.keys(category.subcategories)) {
+          const subcategory = category.subcategories[subKey];
+          const product = subcategory.items.find(item => item.id === id);
+          if (product) return product;
+        }
+      }
+      return null;
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById('cartBadge');
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      badge.textContent = totalItems;
+      badge.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type === 'error' ? 'error' : ''}`;
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    function addToCart(productId) {
+      if (!currentUser) {
+        showNotification('Please login to add items to cart', 'error');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1500);
+        return;
+      }
+
+      const product = findProductById(productId);
+      if (!product) return;
+
+      const existingItem = cart.find(item => item.id === productId);
+      if (existingItem) {
+        existingItem.quantity += 1;
+        showNotification(`Updated quantity for ${product.name}`);
+      } else {
+        cart.push({ ...product, quantity: 1 });
+        showNotification(`${product.name} added to cart!`);
+      }
+      
+      updateCartBadge();
+    }
+
+    function removeFromCart(productId) {
+      const index = cart.findIndex(item => item.id === productId);
+      if (index > -1) {
+        const product = cart[index];
+        cart.splice(index, 1);
+        showNotification(`${product.name} removed from cart`);
+        updateCartBadge();
+        renderCart();
+      }
+    }
+
+    function updateQuantity(productId, newQuantity) {
+      const item = cart.find(item => item.id === productId);
+      if (item && newQuantity > 0) {
+        item.quantity = newQuantity;
+        updateCartBadge();
+        renderCart();
+      } else if (item && newQuantity <= 0) {
+        removeFromCart(productId);
+      }
+    }
+
+    function openCart() {
+      if (!currentUser) {
+        showNotification('Please login to view cart', 'error');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1500);
+        return;
+      }
+      const modal = document.getElementById('cartModal');
+      modal.style.display = 'flex';
+      renderCart();
+    }
+
+    function closeCart() {
+      const modal = document.getElementById('cartModal');
+      modal.style.display = 'none';
+    }
+
+    function renderCart() {
+      const cartItems = document.getElementById('cartItems');
+      const cartTotal = document.getElementById('cartTotal');
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = `
+          <div class="empty-cart">
+            <h3>Your cart is empty</h3>
+            <p>Add some products to get started!</p>
+          </div>
+        `;
+        cartTotal.innerHTML = '';
+        return;
+      }
+
+      cartItems.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <img src="${item.img}" alt="${item.name}">
+          <div class="cart-item-details">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-specs">${item.specs}</div>
+            <div class="cart-item-price">₹${item.price.toLocaleString()}</div>
+          </div>
+          <div class="quantity-controls">
+            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">−</button>
+            <input type="number" class="quantity" value="${item.quantity}" 
+                   onchange="updateQuantity('${item.id}', parseInt(this.value))" min="1">
+            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+          </div>
+          <button class="remove-item" onclick="removeFromCart('${item.id}')">Remove</button>
+        </div>
+      `).join('');
+
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+      cartTotal.innerHTML = `
+        <div class="total-amount">
+          Total: ₹${total.toLocaleString()} (${itemCount} items)
+        </div>
+        <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+      `;
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        showNotification('Your cart is empty!', 'error');
+        return;
+      }
+      closeCart();
+      openPaymentModal();
+    }
+
+    function buyNow(productId) {
+      addToCart(productId);
+      setTimeout(() => {
+        openCart();
+      }, 500);
+    }
+
+    function openPaymentModal() {
+      const modal = document.getElementById('paymentModal');
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      document.getElementById('paymentTotal').textContent = total.toLocaleString();
+      document.getElementById('paymentMethods').style.display = 'block';
+      document.getElementById('paymentDetails').style.display = 'none';
+      modal.style.display = 'flex';
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentModal').style.display = 'none';
+      selectedPaymentMethod = null;
+    }
+
+    function backToPaymentMethods() {
+      document.getElementById('paymentMethods').style.display = 'block';
+      document.getElementById('paymentDetails').style.display = 'none';
+      selectedPaymentMethod = null;
+    }
+
+    function selectPaymentMethod(method) {
+      selectedPaymentMethod = method;
+      document.getElementById('paymentMethods').style.display = 'none';
+      document.getElementById('paymentDetails').style.display = 'block';
+      
+      const paymentForm = document.getElementById('paymentForm');
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      
+      switch(method) {
+        case 'card':
+          paymentForm.innerHTML = `
+            <div class="payment-form">
+              <h3>💳 Card Payment</h3>
+              <div class="card-logos">
+                <span title="Visa">💳</span>
+                <span title="Mastercard">💳</span>
+                <span title="Amex">💳</span>
+                <span title="Rupay">💳</span>
+              </div>
+              <div class="form-group">
+                <label>Card Number</label>
+                <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="cardNumber">
+              </div>
+              <div class="form-group">
+                <label>Cardholder Name</label>
+                <input type="text" placeholder="Name on Card" id="cardName">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Expiry Date</label>
+                  <input type="text" placeholder="MM/YY" maxlength="5" id="cardExpiry">
+                </div>
+                <div class="form-group">
+                  <label>CVV</label>
+                  <input type="password" placeholder="123" maxlength="3" id="cardCVV">
+                </div>
+              </div>
+              <button class="submit-payment-btn" onclick="processPayment()">
+                Pay ₹${total.toLocaleString()}
+              </button>
+            </div>
+          `;
+          break;
+          
+        case 'upi':
+          paymentForm.innerHTML = `
+            <div class="payment-form">
+              <h3>📱 UPI Payment</h3>
+              <div class="form-group">
+                <label>Enter UPI ID</label>
+                <input type="text" placeholder="yourname@upi" id="upiId">
+              </div>
+              <div class="upi-options">
+                <button class="upi-btn" onclick="selectUPIApp('gpay')">
+                  <div>📱</div>
+                  <div>Google Pay</div>
+                </button>
+                <button class="upi-btn" onclick="selectUPIApp('phonepe')">
+                  <div>📱</div>
+                  <div>PhonePe</div>
+                </button>
+                <button class="upi-btn" onclick="selectUPIApp('paytm')">
+                  <div>📱</div>
+                  <div>Paytm</div>
+                </button>
+                <button class="upi-btn" onclick="selectUPIApp('bhim')">
+                  <div>📱</div>
+                  <div>BHIM</div>
+                </button>
+                <button class="upi-btn" onclick="selectUPIApp('amazonpay')">
+                  <div>📱</div>
+                  <div>Amazon Pay</div>
+                </button>
+                <button class="upi-btn" onclick="selectUPIApp('whatsapp')">
+                  <div>💬</div>
+                  <div>WhatsApp</div>
+                </button>
+              </div>
+              <button class="submit-payment-btn" onclick="processPayment()">
+                Pay ₹${total.toLocaleString()}
+              </button>
+            </div>
+          `;
+          break;
+          
+        case 'netbanking':
+          paymentForm.innerHTML = `
+            <div class="payment-form">
+              <h3>🏦 Net Banking</h3>
+              <div class="form-group">
+                <label>Select Your Bank</label>
+                <select id="bankSelect">
+                  <option value="">Choose Bank</option>
+                  <option value="sbi">State Bank of India</option>
+                  <option value="hdfc">HDFC Bank</option>
+                  <option value="icici">ICICI Bank</option>
+                  <option value="axis">Axis Bank</option>
+                  <option value="pnb">Punjab National Bank</option>
+                  <option value="kotak">Kotak Mahindra Bank</option>
+                  <option value="bob">Bank of Baroda</option>
+                  <option value="canara">Canara Bank</option>
+                </select>
+              </div>
+              <div class="bank-list">
+                <button class="bank-btn" onclick="selectBank('sbi')">🏦 SBI</button>
+                <button class="bank-btn" onclick="selectBank('hdfc')">🏦 HDFC</button>
+                <button class="bank-btn" onclick="selectBank('icici')">🏦 ICICI</button>
+                <button class="bank-btn" onclick="selectBank('axis')">🏦 Axis</button>
+                <button class="bank-btn" onclick="selectBank('pnb')">🏦 PNB</button>
+                <button class="bank-btn" onclick="selectBank('kotak')">🏦 Kotak</button>
+              </div>
+              <button class="submit-payment-btn" onclick="processPayment()">
+                Proceed to Bank
+              </button>
+            </div>
+          `;
+          break;
+          
+        case 'wallet':
+          paymentForm.innerHTML = `
+            <div class="payment-form">
+              <h3>👛 Wallet Payment</h3>
+              <div class="upi-options">
+                <button class="upi-btn" onclick="selectWallet('paytm')">
+                  <div>👛</div>
+                  <div>Paytm</div>
+                </button>
+                <button class="upi-btn" onclick="selectWallet('phonepe')">
+                  <div>👛</div>
+                  <div>PhonePe</div>
+                </button>
+                <button class="upi-btn" onclick="selectWallet('amazonpay')">
+                  <div>👛</div>
+                  <div>Amazon Pay</div>
+                </button>
+                <button class="upi-btn" onclick="selectWallet('mobikwik')">
+                  <div>👛</div>
+                  <div>Mobikwik</div>
+                </button>
+                <button class="upi-btn" onclick="selectWallet('freecharge')">
+                  <div>👛</div>
+                  <div>Freecharge</div>
+                </button>
+                <button class="upi-btn" onclick="selectWallet('ola')">
+                  <div>👛</div>
+                  <div>Ola Money</div>
+                </button>
+              </div>
+              <div class="form-group" style="margin-top: 20px;">
+                <label>Enter Wallet OTP (sent to your registered mobile)</label>
+                <input type="text" placeholder="Enter 6-digit OTP" maxlength="6" id="walletOTP">
+              </div>
+              <button class="submit-payment-btn" onclick="processPayment()">
+                Pay ₹${total.toLocaleString()}
+              </button>
+            </div>
+          `;
+          break;
+          
+        case 'cod':
+          paymentForm.innerHTML = `
+            <div class="payment-form">
+              <h3>💵 Cash on Delivery</h3>
+              <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">💵</div>
+                <p style="font-size: 1.1rem; color: #666; margin-bottom: 15px;">
+                  Pay in cash when you receive your order
+                </p>
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                  <p style="color: #856404; margin: 0;">
+                    <strong>Note:</strong> A small COD charge of ₹50 may apply
+                  </p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Delivery Address</label>
+                <input type="text" placeholder="Enter your delivery address" id="codAddress">
+              </div>
+              <div class="form-group">
+                <label>Contact Number</label>
+                <input type="tel" placeholder="Enter 10-digit mobile number" maxlength="10" id="codPhone">
+              </div>
+              <button class="submit-payment-btn" onclick="processPayment()">
+                Confirm Order (COD)
+              </button>
+            </div>
+          `;
+          break;
+      }
+    }
+
+    function selectUPIApp(app) {
+      showNotification(`Opening ${app.toUpperCase()}...`);
+      setTimeout(() => {
+        processPayment();
+      }, 1000);
+    }
+
+    function selectBank(bank) {
+      document.getElementById('bankSelect').value = bank;
+      showNotification(`${bank.toUpperCase()} Bank selected`);
+    }
+
+    function selectWallet(wallet) {
+      showNotification(`${wallet} wallet selected. OTP sent to your mobile.`);
+    }
+
+    function processPayment() {
+      const paymentForm = document.getElementById('paymentForm');
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      
+      let isValid = false;
+      
+      switch(selectedPaymentMethod) {
+        case 'card':
+          const cardNumber = document.getElementById('cardNumber').value;
+          const cardName = document.getElementById('cardName').value;
+          const cardExpiry = document.getElementById('cardExpiry').value;
+          const cardCVV = document.getElementById('cardCVV').value;
+          
+          if (!cardNumber || !cardName || !cardExpiry || !cardCVV) {
+            showNotification('Please fill all card details', 'error');
+            return;
+          }
+          isValid = true;
+          break;
+          
+        case 'upi':
+          const upiId = document.getElementById('upiId').value;
+          if (!upiId) {
+            showNotification('Please enter UPI ID', 'error');
+            return;
+          }
+          isValid = true;
+          break;
+          
+        case 'netbanking':
+          const bank = document.getElementById('bankSelect').value;
+          if (!bank) {
+            showNotification('Please select a bank', 'error');
+            return;
+          }
+          isValid = true;
+          break;
+          
+        case 'wallet':
+          const otp = document.getElementById('walletOTP').value;
+          if (!otp || otp.length !== 6) {
+            showNotification('Please enter valid 6-digit OTP', 'error');
+            return;
+          }
+          isValid = true;
+          break;
+          
+        case 'cod':
+          const address = document.getElementById('codAddress').value;
+          const phone = document.getElementById('codPhone').value;
+          if (!address || !phone) {
+            showNotification('Please fill delivery details', 'error');
+            return;
+          }
+          if (phone.length !== 10) {
+            showNotification('Please enter valid 10-digit phone number', 'error');
+            return;
+          }
+          isValid = true;
+          break;
+      }
+      
+      if (isValid) {
+        showNotification('Processing payment...');
+        
+        setTimeout(() => {
+          const orderId = 'ORD' + Date.now();
+          
+          paymentForm.innerHTML = `
+            <div class="payment-success">
+              <div class="success-icon">✅</div>
+              <h2 style="color: #27ae60; margin-bottom: 15px;">Payment Successful!</h2>
+              <p style="color: #666; font-size: 1.1rem; margin-bottom: 20px;">
+                Thank you for your purchase
+              </p>
+              <div class="order-id">
+                Order ID: ${orderId}
+              </div>
+              <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                  <span>Amount Paid:</span>
+                  <strong>₹${total.toLocaleString()}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                  <span>Payment Method:</span>
+                  <strong>${selectedPaymentMethod.toUpperCase()}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Items:</span>
+                  <strong>${cart.length} products</strong>
+                </div>
+              </div>
+              <p style="color: #666; margin: 20px 0;">
+                Your order will be delivered within 3-5 business days.<br>
+                You will receive order confirmation via email.
+              </p>
+              <button class="submit-payment-btn" onclick="closePaymentAndClearCart()">
+                Continue Shopping
+              </button>
+            </div>
+          `;
+        }, 2000);
+      }
+    }
+
+    function closePaymentAndClearCart() {
+      cart = [];
+      updateCartBadge();
+      closePaymentModal();
+      showNotification('Order placed successfully!');
+      goHome();
+    }
+
+    function applyFilters() {
+      if (currentProducts.length === 0) return;
+
+      const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+      const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+
+      filteredProducts = currentProducts.filter(item => {
+        const priceMatch = item.price >= minPrice && item.price <= maxPrice;
+        const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
+        return priceMatch && brandMatch;
+      });
+
+      renderProducts(filteredProducts);
+    }
+
+    function clearFilters() {
+      document.getElementById('minPrice').value = '';
+      document.getElementById('maxPrice').value = '';
+      selectedBrands = [];
+      
+      filteredProducts = [...currentProducts];
+      updateBrandList();
+      renderProducts(filteredProducts);
+    }
+
+    function renderProducts(products) {
+      const section = document.getElementById('detailsSection');
+
+      if (products.length === 0) {
+        section.innerHTML = `
+          <div style="text-align:center; padding: 40px;">
+            <h3 style="color: #666;">No products match your filters</h3>
+            <p>Try adjusting your filters or clearing them.</p>
+            <button class="btn btn-primary" onclick="clearFilters()" style="margin-top: 15px;">Clear Filters</button>
+          </div>
+        `;
+        return;
+      }
+
+      const activeFiltersHTML = getActiveFiltersHTML();
+
+      section.innerHTML = `
+        ${activeFiltersHTML}
+        <div class="sort-controls">
+          <span>Showing ${products.length} products</span>
+          <select id="sortSelect" onchange="sortProducts(this.value)">
+            <option value="">Sort by</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="name">Name: A to Z</option>
+            <option value="brand">Brand: A to Z</option>
+          </select>
+        </div>
+        <div class="product-grid">
+          ${products.map(item => `
+            <div class="product-card">
+              <img src="${item.img}" alt="${item.name}">
+              <h5>${item.name}</h5>
+              <p>${item.specs}</p>
+              <p><small>Brand: ${item.brand}</small></p>
+              <p class="price">₹${item.price.toLocaleString()}</p>
+              <div class="product-actions">
+                <button class="btn btn-primary" onclick="addToCart('${item.id}')">Add to Cart</button>
+                <button class="btn btn-success" onclick="buyNow('${item.id}')">Buy Now</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function getActiveFiltersHTML() {
+      const filters = [];
+      const minPrice = document.getElementById('minPrice').value;
+      const maxPrice = document.getElementById('maxPrice').value;
+
+      if (minPrice || maxPrice) {
+        const priceText = minPrice && maxPrice ? `₹${minPrice} - ₹${maxPrice}` : 
+                         minPrice ? `Above ₹${minPrice}` : `Below ₹${maxPrice}`;
+        filters.push(`<div class="filter-tag">
+          ${priceText}
+          <button onclick="clearPriceFilter()">×</button>
+        </div>`);
+      }
+
+      selectedBrands.forEach(brand => {
+        filters.push(`<div class="filter-tag">
+          ${brand}
+          <button onclick="toggleBrand('${brand}')">×</button>
+        </div>`);
+      });
+
+      if (filters.length === 0) return '';
+
+      return `<div class="active-filters">${filters.join('')}</div>`;
+    }
+
+    function clearPriceFilter() {
+      document.getElementById('minPrice').value = '';
+      document.getElementById('maxPrice').value = '';
+      applyFilters();
+    }
+
+    function sortProducts(sortBy) {
+      if (!sortBy) return;
+
+      const sorted = [...filteredProducts];
+
+      switch(sortBy) {
+        case 'price-low':
+          sorted.sort((a, b) => a.price - b.price);
+          break;
+        case 'price-high':
+          sorted.sort((a, b) => b.price - a.price);
+          break;
+        case 'name':
+          sorted.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'brand':
+          sorted.sort((a, b) => a.brand.localeCompare(b.brand));
+          break;
+      }
+
+      filteredProducts = sorted;
+      renderProducts(filteredProducts);
+    }
+
+    function createCategoryMenu() {
+      const menu = document.getElementById('categoryMenu');
+      menu.innerHTML = '';
+      
+      Object.keys(data).forEach(categoryKey => {
+        const category = data[categoryKey];
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'category-item';
+        
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'category-header';
+        headerDiv.innerHTML = `${category.name}<span>▼</span>`;
+        
+        const subcategoryList = document.createElement('div');
+        subcategoryList.className = 'subcategory-list';
+        
+        Object.keys(category.subcategories).forEach(subKey => {
+          const subcategory = category.subcategories[subKey];
+          const subDiv = document.createElement('div');
+          subDiv.className = 'subcategory-item';
+          subDiv.textContent = subcategory.name;
+          subDiv.onclick = () => showSubcategory(categoryKey, subKey);
+          subcategoryList.appendChild(subDiv);
+        });
+        
+        headerDiv.onclick = () => {
+          document.querySelectorAll('.subcategory-list').forEach(list => {
+            if (list !== subcategoryList) {
+              list.classList.remove('active');
+              list.parentNode.querySelector('.category-header').classList.remove('active');
+            }
+          });
+          
+          subcategoryList.classList.toggle('active');
+          headerDiv.classList.toggle('active');
+          headerDiv.querySelector('span').textContent = subcategoryList.classList.contains('active') ? '▲' : '▼';
+        };
+        
+        categoryDiv.appendChild(headerDiv);
+        categoryDiv.appendChild(subcategoryList);
+        menu.appendChild(categoryDiv);
+      });
+    }
+
+    function showCategory(categoryKey) {
+      const category = data[categoryKey];
+      const container = document.getElementById('categoryContainer');
+      const details = document.getElementById('detailsSection');
+      
+      currentBreadcrumb = ['Home', category.name];
+      updateBreadcrumb();
+      
+      container.innerHTML = '';
+      details.style.display = 'none';
+      currentProducts = [];
+      filteredProducts = [];
+      selectedBrands = [];
+      updateBrandList();
+
+      Object.keys(category.subcategories).forEach(subKey => {
+        const subcategory = category.subcategories[subKey];
+        const box = document.createElement('div');
+        box.className = 'category-box';
+        box.innerHTML = `
+          <img src="${subcategory.img}" alt="${subcategory.name}">
+          <h4>${subcategory.name}</h4>
+          <p>${subcategory.items.length} Products Available</p>
+        `;
+        box.onclick = () => showSubcategory(categoryKey, subKey);
+        container.appendChild(box);
+      });
+    }
+
+    function showSubcategory(categoryKey, subKey) {
+      const category = data[categoryKey];
+      const subcategory = category.subcategories[subKey];
+      const section = document.getElementById('detailsSection');
+      const container = document.getElementById('categoryContainer');
+      
+      currentBreadcrumb = ['Home', category.name, subcategory.name];
+      updateBreadcrumb();
+      
+      container.innerHTML = '';
+      currentProducts = subcategory.items;
+      filteredProducts = [...currentProducts];
+      selectedBrands = [];
+      
+      updateBrandList();
+      renderProducts(filteredProducts);
+      section.style.display = 'block';
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateBreadcrumb() {
+      const breadcrumb = document.getElementById('breadcrumb');
+      breadcrumb.innerHTML = currentBreadcrumb.join(' → ');
+    }
+
+    function goHome() {
+      document.getElementById('detailsSection').style.display = 'none';
+      currentBreadcrumb = ['Home'];
+      updateBreadcrumb();
+      selectedBrands = [];
+      showCategory('electronics');
+    }
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase().trim();
+      const section = document.getElementById('detailsSection');
+      const container = document.getElementById('categoryContainer');
+      
+      if (!searchTerm) {
+        section.style.display = 'none';
+        container.innerHTML = '';
+        currentBreadcrumb = ['Home'];
+        updateBreadcrumb();
+        currentProducts = [];
+        filteredProducts = [];
+        selectedBrands = [];
+        updateBrandList();
+        showCategory('electronics');
+        return;
+      }
+
+      let results = [];
+      Object.keys(data).forEach(categoryKey => {
+        const category = data[categoryKey];
+        Object.keys(category.subcategories).forEach(subKey => {
+          const subcategory = category.subcategories[subKey];
+          subcategory.items.forEach(item => {
+            if (item.name.toLowerCase().includes(searchTerm) || 
+                item.specs.toLowerCase().includes(searchTerm) ||
+                item.brand.toLowerCase().includes(searchTerm)) {
+              results.push({...item, category: category.name, subcategory: subcategory.name});
+            }
+          });
+        });
+      });
+
+      currentBreadcrumb = ['Home', `Search: "${this.value}"`];
+      updateBreadcrumb();
+      container.innerHTML = '';
+      currentProducts = results;
+      filteredProducts = [...results];
+      selectedBrands = [];
+
+      updateBrandList();
+
+      if (results.length > 0) {
+        renderProducts(filteredProducts);
+      } else {
+        section.innerHTML = `
+          <div style="text-align:center; padding: 40px;">
+            <h3 style="color: #666;">No products found</h3>
+            <p>Try different keywords or browse categories.</p>
+          </div>
+        `;
+      }
+      section.style.display = 'block';
+    });
+
+    document.getElementById('minPrice').addEventListener('input', applyFilters);
+    document.getElementById('maxPrice').addEventListener('input', applyFilters);
+
+    document.getElementById('cartModal').addEventListener('click', function(e) {
+      if (e.target === this) closeCart();
+    });
+
+    document.getElementById('paymentModal').addEventListener('click', function(e) {
+      if (e.target === this) closePaymentModal();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeAuth();
+      createCategoryMenu();
+      showCategory('electronics');
+      updateCartBadge();
+      updateBrandList();
+    });
+    
+  </script>
+</body>
+</html>
