@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <link rel="stylesheet" href="style2.css">
+  <style>
+    .error { 
+      display: none; 
+      color: red; 
+      font-size: 14px; 
+    }
+  </style>
+</head>
+<body>
+  <div class="Form">
+    <h2>Register</h2>
+    <form id="Form">
+      <input type="text" name="fullname" placeholder="Full Name" />
+      <div class="error">Enter your fullname</div>
+
+      <input type="email" name="email" placeholder="Email" />
+      <div class="error">Enter your E-mail</div>
+
+      <input type="text" name="username" placeholder="Username" />
+      <div class="error">Enter your Username</div>
+
+      <input type="password" name="password" placeholder="Password" />
+      <div class="error">Enter your Password</div>
+
+      <button type="submit">Register</button>
+      <p>Already have an account? <a href="login.html">Login here</a></p>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("Form");
+
+    form.addEventListener("submit", function(event) {
+      let isValid = true;
+      const inputs = form.querySelectorAll("input");
+      const errors = form.querySelectorAll(".error");
+
+      // validation
+      inputs.forEach((input, index) => {
+        if (input.value.trim() === "") {
+          errors[index].style.display = "block";
+          isValid = false;
+        } else {
+          errors[index].style.display = "none";
+        }
+      });
+
+      if (!isValid) {
+        event.preventDefault(); 
+        return;
+      }
+
+      // ✅ Data collect பண்ணுறது
+      const userData = {
+        fullname: form.fullname.value,
+        email: form.email.value,
+        username: form.username.value,
+        password: form.password.value
+      };
+
+      // ✅ localStorage-ல save பண்ணுறது
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      // ✅ console-ல காட்டுறது
+      console.log("User Data Stored:", userData);
+
+    });
+  </script>
+</body>
+</html>

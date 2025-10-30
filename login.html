@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - GK Electronics</title>
+  <style>
+  
+  </style>
+  <link rel="stylesheet" href="/style2.css">
+</head>
+<body>
+  <div class="Form">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="text" name="username" placeholder="Username" />
+      <div class="error" id="usernameError">Enter your Username</div>
+
+      <input type="password" name="password" placeholder="Password" />
+      <div class="error" id="passwordError">Enter your Password</div>
+
+      <button type="submit">Login</button>
+    </form>
+    <p id="message"></p>
+    <p>Don't have an account? <a href="register.html">Register here</a></p>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    const message = document.getElementById("message");
+    const usernameError = document.getElementById("usernameError");
+    const passwordError = document.getElementById("passwordError");
+
+    loginForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // Clear previous errors
+      usernameError.classList.remove("show");
+      passwordError.classList.remove("show");
+      message.style.display = "none";
+
+      const username = loginForm.username.value.trim();
+      const password = loginForm.password.value.trim();
+
+      let isValid = true;
+
+      // Validation
+      if (!username) {
+        usernameError.classList.add("show");
+        isValid = false;
+      }
+      if (!password) {
+        passwordError.classList.add("show");
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      // Get saved user from localStorage
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (!savedUser) {
+        message.textContent = "No user found. Please register first.";
+        message.className = "error";
+        message.style.display = "block";
+        return;
+      }
+
+      // Validate username and password
+      if (savedUser.username === username && savedUser.password === password) {
+        // Save current user to localStorage
+        localStorage.setItem("currentUser", JSON.stringify(savedUser));
+        
+        message.textContent = "Login Successful 🎉 Redirecting...";
+        message.className = "success";
+        message.style.display = "block";
+        
+        console.log("Logged in as:", savedUser);
+        
+        // Redirect to category page after 1 second
+        setTimeout(() => {
+          window.location.href = "catagory2.0.html"; // Change this to your category page filename
+        }, 1000);
+      } else {
+        message.textContent = "Invalid Username or Password ❌";
+        message.className = "error";
+        message.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>

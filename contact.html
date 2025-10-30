@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - MyCart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .contact-container {
+      max-width: 700px;
+      margin: 80px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    .btn-custom {
+      background-color: #007bff;
+      color: white;
+      width: 100%;
+    }
+
+    .btn-custom:hover {
+      background-color: #0056b3;
+    }
+
+    #successMessage {
+      display: none;
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">MyCart</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="catagory2.0.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contact Form -->
+  <div class="contact-container">
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+      <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Message</label>
+        <textarea class="form-control" id="message" rows="4" placeholder="Your message..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-custom">Send Message</button>
+
+      <!-- Success message -->
+      <div id="successMessage">✅ Your message has been sent successfully!</div>
+    </form>
+  </div>
+
+  <footer class="text-center mt-5 mb-3 text-muted">
+    © 2025 MyCart. All Rights Reserved.
+  </footer>
+
+  <script>
+    // Form submit function
+    document.getElementById("contactForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent page reload
+
+      // Show the success message
+      document.getElementById("successMessage").style.display = "block";
+
+      // Optionally clear the input fields
+      document.getElementById("contactForm").reset();
+
+      // Hide message after 3 seconds (optional)
+      setTimeout(() => {
+        document.getElementById("successMessage").style.display = "none";
+      }, 3000);
+    });
+  </script>
+
+</body>
+</html>
